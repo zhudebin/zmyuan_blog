@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+
+	<!-- 配置文件读入 ,多个用逗号隔开 -->
+<!-- 	<context:property-placeholder location="classpath:/config/others/app.properties,classpath:/config/mybatis/jdbc.properties,classpath:plusOMSjdbc.properties" /> -->
+
+	<!-- 开启注解 -->
+	<context:annotation-config/>
+	<!-- 该 BeanPostProcessor 将自动对标注 @Autowired 的 Bean 进行注入 -->   
+    <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
+    
+	<!-- 自动搜索@Component , @Service , @Repository等标注的类 不搜索@Controller的类 -->
+	<!-- 自动扫描组件，这里要把web下面的 controller去除，他们是在spring-servlet.xml中配置的，如果不去除会影响事务管理的。 -->
+	<context:component-scan base-package="com.zmyuan" annotation-config="true">
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+
+	<!-- <bean id="freeMarkerConfigurer"
+		class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+		<property name="templateLoaderPath" value="/WEB-INF/freemarker/"></property>
+		<property name="freemarkerSettings">
+			<props>
+				<prop key="template_update_delay">0</prop>
+				<prop key="default_encoding">UTF-8</prop>
+				<prop key="number_format">0.######</prop>
+			</props>
+		</property>
+		<property name="freemarkerVariables">
+			<map>
+				<entry key="xml_escape" value-ref="fmXmlEscape" />
+			</map>
+		</property>
+	</bean>
+	<bean id="fmXmlEscape" class="freemarker.template.utility.XmlEscape" />
+	 -->
+	<bean id="mailSender"
+        class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <!-- SMTP发送邮件的服务器的IP和端口 -->
+        <property name="host" value="192.168.0.118" />
+        <property name="port" value="25" />
+
+        <!-- 登陆SMTP邮件发送服务器的用户名和密码 -->
+        <property name="username" value="dayreport@dooioo.com" />
+        <property name="password" value="dooioo" />
+
+        <!-- 获得邮件会话属性,验证登录邮件服务器是否成功-->
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.smtp.auth">true</prop>
+                <prop key="prop">true</prop>
+                <prop key="mail.smtp.timeout">25000</prop>
+            </props>
+        </property>
+    </bean>
+    
+	<beans profile="development">
+		<bean id="propertyConfigurer" class="com.zmyuan.common.util.Propertyholder">
+			<property name="ignoreResourceNotFound" value="true" />
+			<property name="locations">
+				<list>
+					<value>classpath:/config/others/development/app.properties</value>
+					<value>classpath:/config/mybatis/development/jdbc.properties</value>
+				</list>
+			</property>
+		</bean>
+	</beans>
+	<beans profile="production">
+		<bean id="propertyConfigurer" class="com.zmyuan.common.util.Propertyholder">
+			<property name="ignoreResourceNotFound" value="true" />
+			<property name="locations">
+				<list>
+					<value>classpath:/config/others/production/app.properties</value>
+					<value>classpath:/config/mybatis/production/jdbc.properties</value>
+				</list>
+			</property>
+		</bean>
+	</beans>
+</beans>

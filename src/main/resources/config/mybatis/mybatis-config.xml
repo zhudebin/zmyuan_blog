@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	
+	<settings>
+        <setting name="cacheEnabled" value="false" />
+        <setting name="lazyLoadingEnabled" value="false" />
+        <setting name="aggressiveLazyLoading" value="false"/>
+    </settings>
+	
+	<plugins>
+		<plugin interceptor="com.zmyuan.common.orm.mybatis.plugin.ResultSetInterceptor" />
+		<plugin interceptor="com.zmyuan.common.orm.mybatis.plugin.PageInterceptor">
+			<property name="dialect" value="sqlserver2005" />
+		</plugin>
+	</plugins>
+
+	
+<!-- 	<mappers> -->
+		<!-- 号码共享 -->
+<!-- 		<mapper resource="sqlmapper/phoneRepository/PhoneStatusMapper.xml" />  -->
+<!-- 	</mappers> -->
+
+</configuration>
